@@ -76,5 +76,3 @@ celerybeat-schedule
 # Environments
 .env
 .flaskenv
-Pipfile
-
