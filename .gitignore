@@ -54,6 +54,7 @@ coverage.xml
 # Flask stuff:
 instance/
 .webassets-cache
+velay.db
 
 # Sphinx documentation
 docs/_build/

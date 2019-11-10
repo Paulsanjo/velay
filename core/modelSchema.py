@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, post_load, pre_load
+from marshmallow import Schema, fields, post_load, pre_load, validate
 from . import bcrypt
 from .utils import upload
 
@@ -42,6 +42,9 @@ class ReviewSchema(Schema):
 class VendorSchema(Schema):
     name = fields.Str(required=True)
     password = fields.Str(required=True, load_only=True)
+    confirm_password = fields.Str(required=True,
+                                  validate=validate.Equal(password),
+                                  load_only=True)
     location = fields.Str(required=True)
     Email = fields.Email(required=True)
     company_number = fields.Integer(required=True)
@@ -82,6 +85,9 @@ class CustomerSchema(Schema):
     first_name = fields.Str(required=True)
     last_name = fields.Str(required=True)
     password = fields.Str(required=True, load_only=True)
+    confirm_password = fields.Str(required=True,
+                                  validate=validate.Equal(password),
+                                  load_only=True)
     Address = fields.Str()
     Email = fields.Email(required=True)
     phone_number = fields.Integer(required=True,
