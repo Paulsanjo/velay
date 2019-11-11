@@ -34,7 +34,7 @@ class Register_vendor(Resource):
                 "message": f"Account created"
             }, 201)
         except ValidationError as err:
-            return {"message": err}
+            return {"message": err.message}
 
 
 @api.route("/register/user")
@@ -44,16 +44,16 @@ class Register_user(Resource):
         cSchema = CustomerSchema()
         try:
             customer = cSchema.load(api.payload)
-            new_customer = Customer(first_name=customer["first_name"],
-                                    last_name=customer["last_name"],
-                                    password=customer["password"],
-                                    Address=customer["Address"],
-                                    Email=customer["Email"],
-                                    phone_number=customer["phone_number"])
-            db.session.add(new_customer)
-            db.session.commit()
+            # new_customer = Customer(first_name=customer["first_name"],
+            #                         last_name=customer["last_name"],
+            #                         password=customer["password"],
+            #                         Address=customer["Address"],
+            #                         Email=customer["Email"],
+            #                         phone_number=customer["phone_number"])
+            # db.session.add(new_customer)
+            # db.session.commit()
             return ({
                 "message": f"User account create successfully, welcome {customer['first_name']}"
             }, 201)
-        except ValidationError as err:
+        except Exception as err:
             return {"message": err.messages}

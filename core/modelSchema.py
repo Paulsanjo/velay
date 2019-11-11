@@ -1,6 +1,7 @@
-from marshmallow import Schema, fields, post_load, pre_load, validate
+from marshmallow import (Schema, fields, post_load, pre_load,
+                         validate)
 from . import bcrypt
-from .utils import upload
+from .utils import Tools
 
 
 class CategorySchema(Schema):
@@ -27,34 +28,35 @@ class ProductSchema(Schema):
 
     @pre_load
     def iamge(self, data, **kwargs):
-        data["image_url"] = upload(data["image_url"])
+        data["image_url"] = Tools.upload(data["image_url"])
         return data
 
 
 class ReviewSchema(Schema):
-    rating = fields.Integer(required=True, default=3)
+    rating = fields.Integer(required=True, default=3,
+                            validate=validate.Length(min=1, max=5))
     title = fields.Str(required=True)
     content = fields.Str()
     restaurant = fields.Nested("VendorSchema",
                                exclude=("password", "reviews"))
 
 
-class VendorSchema(Schema):
-    name = fields.Str(required=True)
-    password = fields.Str(required=True, load_only=True)
-    confirm_password = fields.Str(required=True,
-                                  validate=validate.Equal(password),
-                                  load_only=True)
+class VendorSchema(Schema, Tools):
+    name = fields.Method("setup", deserialize="load_name",
+                         required=True, validate=validate.Length(min=3, max=20))
+    password = fields.Str(required=True, load_only=True,
+                          validate=validate.Length(min=8, max=15))
     location = fields.Str(required=True)
     Email = fields.Email(required=True)
-    company_number = fields.Integer(required=True)
+    company_number = fields.Integer(required=True, validate=Tools.contact)
     products = fields.Nested(ProductSchema, many=True)
     reviews = fields.Nested(ReviewSchema, many=True,
                             only=("name", "price", "description"))
 
     @post_load
-    def hash_password(self, data, **kwargs):
-        data["password"] = bcrypt.generate_password_hash(data["password"])
+    def adjust_data(self, data, **kwargs):
+        data["password"] = bcrypt.generate_password_hash(data["password"].strip())
+        data["phone_number"] = int(data["phone_number"])
         return data
 
 
@@ -72,7 +74,6 @@ class SaleSchema(Schema):
     to a Schema that is yet to be created, if outside quotations then schema should already be
     defined before the schema that calls it."""
 
-    date = fields.DateTime(required=True)
     orders = fields.Nested("OrderSchema", many=True)
     vendors = fields.Nested("VendorSchema",
                             only=("name", "Email"))
@@ -81,22 +82,20 @@ class SaleSchema(Schema):
         fields = ("orders", "date", "vendors")
 
 
-class CustomerSchema(Schema):
-    first_name = fields.Str(required=True)
-    last_name = fields.Str(required=True)
-    password = fields.Str(required=True, load_only=True)
-    confirm_password = fields.Str(required=True,
-                                  validate=validate.Equal(password),
-                                  load_only=True)
+class CustomerSchema(Schema, Tools):
+    first_name = fields.Method("setup", deserialize="load_name",
+                               required=True, validate=validate.Length(min=3, max=20))
+    last_name = fields.Method("setup", deserialize="load_name",
+                              required=True, validate=validate.Length(min=3, max=20))
+    password = fields.Str(required=True, load_only=True,
+                          validate=validate.Length(min=8, max=15))
     Address = fields.Str()
-    Email = fields.Email(required=True)
-    phone_number = fields.Integer(required=True,
-                                  error_messages={
-                                      "phone number": "not a valid phone number"
-                                  })
+    Email = fields.Email(required=True, validate=validate.Email())
+    phone_number = fields.Integer(required=True, validate=Tools.contact)
     orders = fields.Nested(OrderSchema)
 
     @post_load
-    def hash_password(self, data, **kwargs):
-        data["password"] = bcrypt.generate_password_hash(data["password"])
+    def adjust_data(self, data, **kwargs):
+        data["password"] = bcrypt.generate_password_hash(data["password"].strip())
+        data["phone_number"] = int(data["phone_number"])
         return data

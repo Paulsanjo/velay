@@ -6,7 +6,7 @@ class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(20), nullable=False)
-    password = db.Column(db.String(20), nullable=False)
+    password = db.Column(db.String(15), nullable=False)
     Address = db.Column(db.String(50))
     Email = db.Column(db.String(50), nullable=False, unique=True)
     phone_number = db.Column(db.Integer, unique=True, nullable=False)
@@ -32,8 +32,8 @@ class Review(db.Model):
 
 class Vendor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False)
-    password = db.Column(db.String(20), nullable=False)
+    name = db.Column(db.String(20), nullable=False)
+    password = db.Column(db.String(15), nullable=False)
     location = db.Column(db.String(20), nullable=False)
     Email = db.Column(db.String(20), nullable=False, unique=True)
     company_number = db.Column(db.Integer, unique=True, nullable=False)
