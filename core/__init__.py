@@ -22,6 +22,6 @@ db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 migrate = Migrate(app, db)
 
-from apis.main import home
+from apis_routes.main import home
 
 app.register_blueprint(home)

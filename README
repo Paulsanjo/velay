@@ -1,0 +1,3 @@
+An Ecommerce Restful api built from the ground up with python's Flask, with asynchronous and async await funtionality, a postgreSQL relational database and much more.
+Just your average application with the ability for individuals to pick and order products from vendors using their credit/debit card or their paypal/paystack account(payoneer is not integrated into it). 
+It has sales tracking so vendors can watch their sales pattern, the number of partiicular products they dispense daily. More products can be added along a huge variety of category options
