@@ -4,8 +4,8 @@ from core.models import Customer, Order
 from flask_restplus import Api, Resource
 from core.modelSchema import CustomerSchema, OrderSchema
 
-customers = Blueprint('customers', __name__)
-api = Api(customers)
+customer = Blueprint('customers', __name__)
+api = Api(customer)
 
 
 @api.route("/<user>")
@@ -29,9 +29,6 @@ class Orders(Resource):
         return orders
 
     def post(self):
-        pass
-
-    def putt(self):
         pass
 
     def delete(self):

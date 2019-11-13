@@ -1,20 +1,20 @@
-#An Ecommerce Restful api built from the ground up with python's Flask, with asynchronous and async await funtionality, a postgreSQL relational database and much more.
+## An Ecommerce Restful api built from the ground up with python's Flask, with asynchronous and async await funtionality, a postgreSQL relational database and much more.
 
-#Just your average application with the ability for individuals to pick and order products from vendors using their credit/debit card or their paypal/paystack account(payoneer is not integrated into this early version). 
+## Just your average application with the ability for individuals to pick and order products from vendors using their credit/debit card or their paypal/paystack account(payoneer is not integrated into this early version). 
 
-#It has sales tracking so vendors can watch their sales pattern, the number of partiicular products they dispense daily. More products can be added along a huge variety of category options
+## It has sales tracking so vendors can watch their sales pattern, the number of partiicular products they dispense daily. More products can be added along a huge variety of category options
 
 
 ## Technologies Used
 
-- [Python]()
-- [Flask]()
+- [Python](https://www.python.org/)
+- [Flask](http://flask.palletsprojects.com/en/1.1.x/)
 - [PostgreSQL](https://www.postgresql.org/download/)
 
 
 ## Getting Started
 
-### Prerequisites
+## Prerequisites
 
 Ensure you have the following installed on your local machine:
 

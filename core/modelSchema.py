@@ -1,7 +1,7 @@
 from marshmallow import (Schema, fields, post_load, pre_load,
                          validate)
 from . import bcrypt
-from .utils import Tools
+from utilities.utils import Tools
 
 
 class CategorySchema(Schema):
@@ -11,7 +11,7 @@ class CategorySchema(Schema):
 class ProductSchema(Schema):
     name = fields.Str(required=True)
     price = fields.Integer(required=True)
-    quantity = fields.Str(required=True)
+    quantity = fields.Integer(required=True)
     description = fields.Str()
     image_url = fields.Str()
     category = fields.Nested(CategorySchema, many=True)
@@ -20,6 +20,8 @@ class ProductSchema(Schema):
     restaurant = fields.Nested("VendorSchema",
                                many=True, exclude=("product",
                                                    "password"))
+    reviews = fields.Nested("ReviewSchema", many=True,
+                            only=("rating", "title", "content"))
 
     class Meta:
         fields = ("name", "price", "quantity",
@@ -33,25 +35,23 @@ class ProductSchema(Schema):
 
 
 class ReviewSchema(Schema):
-    rating = fields.Integer(required=True, default=3,
+    rating = fields.Integer(required=True,
                             validate=validate.Length(min=1, max=5))
     title = fields.Str(required=True)
     content = fields.Str()
-    restaurant = fields.Nested("VendorSchema",
-                               exclude=("password", "reviews"))
+    product = fields.Nested("ProductSchema",
+                            exclude=("image_url", "reviews"))
 
 
 class VendorSchema(Schema, Tools):
     name = fields.Method("setup", deserialize="load_name",
                          required=True, validate=validate.Length(min=3, max=20))
     password = fields.Str(required=True, load_only=True,
-                          validate=validate.Length(min=8, max=15))
+                          validate=Tools.password_strength)
     location = fields.Str(required=True)
     Email = fields.Email(required=True)
     company_number = fields.Integer(required=True, validate=Tools.contact)
     products = fields.Nested(ProductSchema, many=True)
-    reviews = fields.Nested(ReviewSchema, many=True,
-                            only=("name", "price", "description"))
 
     @post_load
     def adjust_data(self, data, **kwargs):
@@ -63,7 +63,7 @@ class VendorSchema(Schema, Tools):
 class OrderSchema(Schema):
     quantity = fields.Integer(required=True, default=1)
     product = fields.Nested("ProductSchema",
-                            exclude=("orders",))
+                            exclude=("orders", "reviews"))
 
     class Meta:
         fields = ("product", "quantity")
@@ -88,7 +88,7 @@ class CustomerSchema(Schema, Tools):
     last_name = fields.Method("setup", deserialize="load_name",
                               required=True, validate=validate.Length(min=3, max=20))
     password = fields.Str(required=True, load_only=True,
-                          validate=validate.Length(min=8, max=15))
+                          validate=Tools.password_strength)
     Address = fields.Str()
     Email = fields.Email(required=True, validate=validate.Email())
     phone_number = fields.Integer(required=True, validate=Tools.contact)
@@ -97,5 +97,5 @@ class CustomerSchema(Schema, Tools):
     @post_load
     def adjust_data(self, data, **kwargs):
         data["password"] = bcrypt.generate_password_hash(data["password"].strip())
-        data["phone_number"] = int(data["phone_number"])
+        data["phone_number"] = "+234" + str(data["phone_number"])
         return data

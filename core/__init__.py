@@ -23,5 +23,9 @@ bcrypt = Bcrypt(app)
 migrate = Migrate(app, db)
 
 from apis_routes.main import home
+from apis_routes.vendor import vendor
+from apis_routes.customer import customer
 
 app.register_blueprint(home)
+app.register_blueprint(vendor)
+app.register_blueprint(customer)

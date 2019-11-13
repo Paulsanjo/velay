@@ -18,14 +18,14 @@ class Customer(db.Model):
 
 reviews = db.Table("reviews",
                    db.Column("customer_id", db.Integer, db.ForeignKey("customer.id"), primary_key=True),
-                   db.Column("vendor_id", db.Integer, db.ForeignKey("vendor.id"), primary_key=True),
+                   db.Column("vendor_id", db.Integer, db.ForeignKey("product.id"), primary_key=True),
                    db.Column("review_id", db.Integer, db.ForeignKey("review.id"), primary_key=True)
                    )
 
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    rating = db.Column(db.Integer, nullable=False)
+    rating = db.Column(db.Integer, nullable=False, default=0)
     title = db.Column(db.String(20), nullable=False)
     content = db.Column(db.String(100))
 
@@ -39,8 +39,6 @@ class Vendor(db.Model):
     company_number = db.Column(db.Integer, unique=True, nullable=False)
     product = db.relationship("Product", backref="restaurant", lazy=True)
     sales = db.relationship("Sales", backref="sales", lazy=True)
-    review = db.relationship("Review", secondary=reviews, lazy="subquery",
-                             backref=db.backref("review", lazy=True))
 
 
 class Product(db.Model):
@@ -54,6 +52,8 @@ class Product(db.Model):
     order_id = db.Column(db.Integer, db.ForeignKey("order.id"))
     category = db.relationship("Category", secondary="categories", lazy="subquery",
                                backref=db.backref("food", lazy=True))
+    review = db.relationship("Review", secondary=reviews, lazy="subquery",
+                             backref=db.backref("review", lazy=True))
 
 
 categories = db.Table("categories",
