@@ -37,7 +37,7 @@ class Vendor(db.Model):
     location = db.Column(db.String(20), nullable=False)
     Email = db.Column(db.String(20), nullable=False, unique=True)
     company_number = db.Column(db.Integer, unique=True, nullable=False)
-    product = db.relationship("Product", backref="restaurant", lazy=True)
+    product = db.relationship("Product", backref="vendor", lazy=True)
     sales = db.relationship("Sales", backref="sales", lazy=True)
 
 
@@ -51,7 +51,7 @@ class Product(db.Model):
     restaurant_id = db.Column(db.Integer, db.ForeignKey("vendor.id"))
     order_id = db.Column(db.Integer, db.ForeignKey("order.id"))
     category = db.relationship("Category", secondary="categories", lazy="subquery",
-                               backref=db.backref("food", lazy=True))
+                               backref=db.backref("item", lazy=True))
     review = db.relationship("Review", secondary=reviews, lazy="subquery",
                              backref=db.backref("review", lazy=True))
 

@@ -36,20 +36,21 @@ class Tools():
 
         pattern = re.compile(r"(([\W+_])([A-Z]))")
         num = re.compile(r"\d+")
+
         try:
-            if not pattern.search(data).group(2) and pattern.search(data).group(2):
+            if not pattern.search(data).group(2) and pattern.search(data).group(3):
                 raise ValidationError("""
-                        Password must contain at least 8 characters one numeric character, one special character and one Uppercase letter
+                        Password must contain at least 8 characters, one numeric, one special and one Uppercase
                      """)
             elif not num.findall(data):
                 raise ValidationError("""
-                        Password must contain at least 8 characters one numeric character, one special character and one Uppercase letter
+                        Password must contain at least 8 characters, one numeric, one special and one Uppercase
                      """)
             elif len(data) < 8 or len(data) > 15:
                 raise ValidationError("Password cannot be less than 8 characters")
         except Exception:
             raise ValidationError("""
-                        Password must contain at least 8 characters one numeric character, one special character and one Uppercase letter
+                        Password must contain at least 8 characters one numeric, one special and one Uppercase
                      """)
 
     def upload(file):
