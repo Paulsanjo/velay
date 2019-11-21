@@ -1,22 +1,21 @@
-from flask import Blueprint, request
+from flask import Blueprint
 from flask_restplus import Api, Resource
-from core.models import Product, Review
-from core.modelSchema import ProductSchema
+from core.models import Category
+from core.modelSchema import CategorySchema
 # from marshmallow import ValidationError
 
 
-home = Blueprint('home', __name__)
+home = Blueprint('homes', __name__)
 api = Api(home)
 
 
 @api.route("/")
 class Home(Resource):
     def get(self):
-        pSchema = ProductSchema(many=True)
-        page = request.args.get("page", 1, type=int)
-        product = Product.query.order_by(Review.rating.asc()).paginate(page=page, per_page=12)
-        product = pSchema.dump(product.items)
-        return {"product": product}
+        cSchema = CategorySchema(many=True)
+        categories = Category.query.get().all()
+        categories = cSchema.dump(categories)
+        return {"Categories": categories}
 
 
 @api.route("/login")
