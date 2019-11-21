@@ -8,11 +8,8 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 
 app = Flask(__name__)
-CORS(app)
-
-
 app.config.from_object(DevelopConfig)
-
+CORS(app)
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 migrate = Migrate(app, db)

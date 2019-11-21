@@ -42,7 +42,7 @@ class Product(db.Model):
     description = db.Column(db.String(100), default="No description")
     image_url = db.Column(db.String(50), default="default.jpg")
     restaurant_id = db.Column(db.Integer, db.ForeignKey("vendor.id"))
-    order_id = db.Column(db.Integer, db.ForeignKey("order.id"))
+    orders = db.relationship("Order", backref="products", lazy=True)
     category = db.relationship("Category", secondary="categories", lazy="subquery",
                                backref=db.backref("items", lazy=True))
     rating = db.relationship("Review", secondary="ratings", lazy="subquery",
@@ -69,10 +69,10 @@ class Sales(db.Model):
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    sales = db.relationship("Sales", backref="sale", lazy=True)
+    sales = db.relationship("Sales", backref="orders", lazy=True)
     consumer_id = db.Column(db.Integer, db.ForeignKey("customer.id"))
-    vendor_id = db.Column(db.Integer, db.ForeignKey("vendor.id"))
     quantity = db.Column(db.Integer, nullable=False)
+    vendor_id = db.Column(db.Integer, db.ForeignKey("vendor.id"))
     product_id = db.Column(db.Integer, db.ForeignKey("product.id"))
 
 
@@ -82,3 +82,4 @@ class Review(db.Model):
     title = db.Column(db.String(20), nullable=False)
     content = db.Column(db.String(100))
     customer_id = db.Column(db.Integer, db.ForeignKey("customer.id"))
+    product_id = db.Column(db.Integer, db.ForeignKey("product.id"))

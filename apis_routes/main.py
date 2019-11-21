@@ -23,3 +23,11 @@ class Home(Resource):
 class Login(Resource):
     def post(self):
         return " "
+
+# for searching through the database with elastic search.
+
+
+@api.route("/search")
+class Search(Resource):
+    def get(self):
+        return " "

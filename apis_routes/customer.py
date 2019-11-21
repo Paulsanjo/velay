@@ -30,7 +30,13 @@ class Register_user(Resource):
                                             phone_number=customer["phone_number"])
                     # db.session.add(new_customer)
                     # db.session.commit()
+<<<<<<< HEAD
                     return ({"message": f"User account create successfully, welcome"}, 201)
+=======
+                    return {
+                        "message": f"User account create successfully, welcome"
+                    }, 201
+>>>>>>> 00cd155... update to core files, added admin page, added testing, updated routes
                 except Exception:
                     # db.session.rollback()
                     return{"phone_error": "phone number already in use, pick another"}, 400
@@ -39,7 +45,11 @@ class Register_user(Resource):
             return {"other_error": err.messages}
 
 
+<<<<<<< HEAD
 @api.route("/user/<name>")
+=======
+@api.route("/<user_id>")
+>>>>>>> 00cd155... update to core files, added admin page, added testing, updated routes
 class Account(Resource):
     def get(self, name):
         return " "
@@ -51,23 +61,26 @@ class Account(Resource):
         pass
 
 
-@api.route("/orders")
+@api.route("/<user>/orders")
 class Orders(Resource):
     def get(self):
         oSchema = OrderSchema()
         order = Customer.query.all()
         orders = oSchema.dump(order)
-        return orders
+        return {"orders": orders}
 
     def post(self):
         pass
 
-    def delete(self):
-        pass
 
+<<<<<<< HEAD
 
 @api.route("/vendor/<vendor>/product/<int:product_id>/review")
 class ProductReview(Resource):
+=======
+@api.route("/<vendor>/product/<int:product_id>/review")
+class Review_Product(Resource):
+>>>>>>> 00cd155... update to core files, added admin page, added testing, updated routes
     def get(self):
         reviews = Review.get().paginate(per_page=10)
         rSchema = ReviewSchema()
@@ -75,7 +88,11 @@ class ProductReview(Resource):
         return {"reviews": results}
 
     def post(self):
+<<<<<<< HEAD
         # asynchronous function for posting reviews to the site
+=======
+        # Use ceelry here for asynchronous functionality
+>>>>>>> 00cd155... update to core files, added admin page, added testing, updated routes
         rSchema = ReviewSchema()
         review = rSchema.load(api.payload)
         try:
@@ -90,19 +107,34 @@ class ProductReview(Resource):
                 return {"message": "Thank you for reviewing this product"}
         except IntegrityError:
             db.session.rollback()
+<<<<<<< HEAD
             return {"error": "Invalid entry, please try again"}, 500
+=======
+            return {"error": "Invalid entry, please try again"}
+>>>>>>> 00cd155... update to core files, added admin page, added testing, updated routes
 
 
 @api.route("/<vendor>/product/<int:product_id>/review/<int:review_id>")
 class Review_OneProduct(Resource):
     def get(self, review_id):
+<<<<<<< HEAD
         review = Review.query.get_or_404(id=review_id).first()
+=======
+        review = Review.query.get_or_404(id=review_id)
+>>>>>>> 00cd155... update to core files, added admin page, added testing, updated routes
         rSchema = ReviewSchema()
         results = rSchema.dump(review)
         return {"reviews": results}
 
     def delete(self, review_id):
+<<<<<<< HEAD
         review = Review.query.get_or_404(id=review_id).first()
         db.session.delete(review)
         db.session.commit()
         return {"message": "successfully deleted item"}, 203
+=======
+        review = Review.query.get_or_404(id=review_id)
+        db.session.delete(review)
+        db.session.commit()
+        return {"message": "successfully deleted item"}
+>>>>>>> 00cd155... update to core files, added admin page, added testing, updated routes
