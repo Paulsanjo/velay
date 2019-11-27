@@ -4,6 +4,7 @@ import secrets
 import fnmatch
 from core import app
 from PIL import Image
+from core import bcrypt
 from marshmallow import ValidationError
 
 
@@ -36,26 +37,30 @@ class Tools():
 
         pattern = re.compile(r"(([\W+_])([A-Z]))")
         num = re.compile(r"\d+")
+
         try:
-            if not pattern.search(data).group(2) and pattern.search(data).group(2):
+            if not pattern.search(data).group(2) and pattern.search(data).group(3):
                 raise ValidationError("""
-                        Password must contain at least 8 characters one numeric character, one special character and one Uppercase letter
+                        Password must contain at least 8 characters, one numeric, one special and one Uppercase
                      """)
             elif not num.findall(data):
                 raise ValidationError("""
-                        Password must contain at least 8 characters one numeric character, one special character and one Uppercase letter
+                        Password must contain at least 8 characters, one numeric, one special and one Uppercase
                      """)
             elif len(data) < 8 or len(data) > 15:
                 raise ValidationError("Password cannot be less than 8 characters")
         except Exception:
             raise ValidationError("""
-                        Password must contain at least 8 characters one numeric character, one special character and one Uppercase letter
+                        Password must contain at least 8 characters one numeric, one special and one Uppercase
                      """)
 
     def upload(file):
         """file validation and handling for images in the system"""
 
-        if not fnmatch.fnmatch(file, "*.jpg") or fnmatch.fnmatch(file, "*.png"):
+        if not (fnmatch.fnmatch(file, "*.jpg") or
+                fnmatch.fnmatch(file, "*.png") or
+                fnmatch.fnmatch(file, "*.jpeg")):
+
             raise ValidationError("not a valid image")
         random_hex = secrets.token_hex(8)
         _, f_ext = os.path.splitext(file)
@@ -67,3 +72,10 @@ class Tools():
         i.thumbnail(thumbnail)
         i.save(image_path)
         return product_image
+
+
+def login_user(model, payload):
+    user = model.query.filter_by(Email=payload["email"]).first()
+    if user and bcrypt.check_password_hash(user.password, payload["password"]):
+        return user
+    return None

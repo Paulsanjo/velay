@@ -20,6 +20,17 @@ flask-admin = "*"
 flask-cors = "*"
 pillow = "*"
 fnmatch = "*"
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+flask-script = "*"
+flask-testing = "*"
+elasticsearch = "*"
+>>>>>>> d7939a7... improved build, addition of much needed files
+=======
+flask-script = "*"
+flask-testing = "*"
+>>>>>>> 9a953c6... created test suit, updated configuration setting and entry, created manage.py file
 
 [requires]
 python_version = "3.7"

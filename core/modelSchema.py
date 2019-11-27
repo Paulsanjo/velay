@@ -99,3 +99,8 @@ class CustomerSchema(Schema, Tools):
         data["password"] = bcrypt.generate_password_hash(data["password"].strip())
         data["phone_number"] = "+234" + str(data["phone_number"])
         return data
+
+
+class LoginSchema(Schema):
+    email = fields.Str(required=True, validate=validate.Email())
+    password = fields.Str(required=True)

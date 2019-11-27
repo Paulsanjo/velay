@@ -1,28 +1,36 @@
-import os
 from flask import Flask
 from flask_bcrypt import Bcrypt
-from flask_restplus import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_migrate import Migrate
+from .config import DevelopConfig
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 
 app = Flask(__name__)
-api = Api(app)
 CORS(app)
 
 
-Secret_Key = os.environ.get("SECRET_KEY")
-Database_Uri = os.environ.get("SQLALCHEMY_DATABASE_URI")
-
-app.config["SECRET_KEY"] = Secret_Key
-app.config["SQLALCHEMY_DATABASE_URI"] = Database_Uri
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config.from_object(DevelopConfig)
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
 migrate = Migrate(app, db)
+admin = Admin(app, template_mode="bootstrap3")
 
-from apis_routes.main import home
+from .models import (Customer, Review, Vendor,
+                     Product, Sales, Order, Category)
+
+admin.add_view(ModelView(Customer, db.session))
+admin.add_view(ModelView(Vendor, db.session))
+admin.add_view(ModelView(Product, db.session))
+admin.add_view(ModelView(Review, db.session))
+admin.add_view(ModelView(Sales, db.session))
+admin.add_view(ModelView(Order, db.session))
+admin.add_view(ModelView(Category, db.session))
+
+
+from apis_routes.home import home
 from apis_routes.vendor import vendor
 from apis_routes.customer import customer
 
